@@ -1,17 +1,18 @@
+import sys
+
 from machine import Timer
-from utime import ticks_us, sleep_us
-
-from device import DeviceController as D, messages
-from serial import process_line
-
 import micropython
+import select
+
+from device import DeviceController, messages
+from serial import process_line
 
 micropython.alloc_emergency_exception_buf(100)
 
 
 def toggle_led():
-    pin_value = D.pin(25).value
-    D.pin(25).set_value(0 if pin_value else 1)
+    pin_value = DeviceController.pin(25).value
+    DeviceController.pin(25).set_value(0 if pin_value else 1)
 
 
 def x(command):
@@ -21,6 +22,9 @@ def x(command):
 def check_and_print_messages():
     if messages:
         print(f"{messages.pop()}")
+    while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+        ch = sys.stdin.readline()
+        print(ch)
 
 
 def watch_deltas():
@@ -39,8 +43,8 @@ def watch_deltas():
 #     callback=lambda t: toggle_led()
 # )
 
-D.set_pin_data_direction(25, is_output=True)
+# DeviceController.set_pin_data_direction(25, is_output=True)
 
-D.set_pin_data_direction(2, is_output=False)
+DeviceController.set_pin_data_direction(2, is_output=False)
 
 watch_deltas()
