@@ -5,7 +5,14 @@ import micropython
 import select
 
 from device import DeviceController, messages
-from serial import process_line
+
+# noinspection PyUnresolvedReferences
+from serial_commands import (
+    setup_input_pin as pi,
+    setup_output_pin as po,
+    set_pin_on as n,
+    set_pin_off as f,
+)
 
 micropython.alloc_emergency_exception_buf(100)
 
@@ -13,10 +20,6 @@ micropython.alloc_emergency_exception_buf(100)
 def toggle_led():
     pin_value = DeviceController.pin(25).value
     DeviceController.pin(25).set_value(0 if pin_value else 1)
-
-
-def x(command):
-    process_line(command)
 
 
 def check_and_print_messages():

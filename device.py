@@ -57,19 +57,19 @@ class PinWrapper:
 
 
 class DeviceController:
-    pins = [None] * 27
+    pins: list[PinWrapper | None] = [None] * 27
 
     @staticmethod
-    def pin(pin_number):
+    def pin(pin_number) -> PinWrapper:
         return instance.pins[pin_number]
 
     @staticmethod
-    def print_states():
+    def print_states() -> None:
         states = " | ".join([f"{pin}" for index, pin in enumerate(instance.pins) if pin])
         print(states)
 
     @staticmethod
-    def set_pin_data_direction(pin_number, is_output):
+    def set_pin_data_direction(pin_number, is_output) -> None:
         if not instance.pins[pin_number]:
             instance.pins[pin_number] = PinWrapper(pin_number, is_output=is_output)
             return
