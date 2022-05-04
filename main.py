@@ -12,6 +12,7 @@ from serial_commands import (
     setup_output_pin as po,
     set_pin_on as n,
     set_pin_off as f,
+    reset as r,
 )
 
 micropython.alloc_emergency_exception_buf(100)

@@ -1,6 +1,8 @@
+import machine
+
 from device import DeviceController
 
-debug = False
+debug = True
 
 
 def log(s: str):
@@ -25,6 +27,11 @@ def set_pin_on(pin_number: int):
     DeviceController \
         .pin(pin_number) \
         .set_value(1)
+
+
+def reset():
+    log("Resetting...")
+    machine.soft_reset()
 
 
 def set_pin_off(pin_number: int):
