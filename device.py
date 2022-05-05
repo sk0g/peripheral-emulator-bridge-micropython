@@ -57,7 +57,7 @@ class PinWrapper:
 
 
 class DeviceController:
-    pins: list[PinWrapper | None] = [None] * 27
+    pins: list[PinWrapper | None] = [None] * 29
 
     @staticmethod
     def pin(pin_number) -> PinWrapper:
