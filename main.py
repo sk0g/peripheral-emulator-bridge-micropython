@@ -1,5 +1,6 @@
 import sys
 
+import utime
 from machine import Timer
 import micropython
 import select
@@ -26,14 +27,13 @@ def toggle_led():
 def check_and_print_messages():
     if messages:
         print(f"{messages.pop()}")
+    # TODO rewrite to use polling (select.poll) below
     while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
         ch = sys.stdin.readline()
         print(ch)
 
 
 def watch_deltas():
-    print("start")
-
     Timer().init(
         period=1,
         mode=Timer.PERIODIC,
