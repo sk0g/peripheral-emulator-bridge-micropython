@@ -15,6 +15,8 @@ from serial_commands import (
     set_pin_off as f,
     reset as r,
 )
+# noinspection PyUnresolvedReferences
+from second_core import pulse as p
 
 micropython.alloc_emergency_exception_buf(100)
 
