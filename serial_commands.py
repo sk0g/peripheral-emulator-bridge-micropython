@@ -2,7 +2,7 @@ import machine
 
 from device import DeviceController
 
-debug = True
+debug = False
 
 
 def log(s: str):
