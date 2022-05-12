@@ -1,6 +1,6 @@
 import _thread
 
-import utime
+from utime import ticks_us, ticks_add, ticks_diff, sleep_us
 
 from device import DeviceController
 
@@ -10,8 +10,8 @@ status:
     0 - not started
     1 - waiting
     2 - finished
-end_at_ns: 
-    the utime.time_ns() to end this pulse at
+end_at_us: 
+    the time in microseconds to end this pulse at
 on_pin: 
     the GPIO pin the pulse is running on
 """
@@ -23,13 +23,13 @@ def manage_pulses():
 
     while True:
         removable_indices = []
-        for index, (status, end_at_ns, on_pin) in enumerate(tasks):
+        for index, (status, end_at_us, on_pin) in enumerate(tasks):
             if status == 0:  # task is to be started
                 DeviceController.pin(on_pin).set_value(1)
                 tasks[index][0] = 1
                 continue
 
-            if status == 1 and utime.time_ns() >= end_at_ns:  # task has just completed
+            if status == 1 and ticks_diff(ticks_us(), end_at_us) >= 0:  # task has just completed
                 DeviceController.pin(on_pin).set_value(0)
                 tasks[index][0] = 2
                 continue
@@ -44,11 +44,15 @@ def manage_pulses():
             except IndexError:
                 continue
 
-        utime.sleep_us(20)
+        sleep_us(100)
 
 
 def pulse(pin_number: int, duration_ms: float):
-    tasks.append([0, utime.time_ns() + duration_ms * 1e6, pin_number])
+    tasks.append([
+        0,
+        ticks_add(ticks_us(), int(duration_ms * 1e3)),
+        pin_number,
+    ])
 
 
 def init_second_core_task():

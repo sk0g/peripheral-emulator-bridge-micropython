@@ -27,6 +27,7 @@ def toggle_led():
 def check_and_print_messages():
     if messages:
         print(f"{messages.pop()}")
+
     # TODO rewrite to use polling (select.poll) below
     while sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
         ch = sys.stdin.readline()
