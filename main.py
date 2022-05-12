@@ -1,12 +1,10 @@
 import sys
 
-import utime
 from machine import Timer
 import micropython
 import select
 
 from device import DeviceController, messages
-
 # noinspection PyUnresolvedReferences
 from serial_commands import (
     setup_input_pin as pi,
@@ -16,7 +14,7 @@ from serial_commands import (
     reset as r,
 )
 # noinspection PyUnresolvedReferences
-from second_core import pulse as p
+from second_core import pulse as p, init_second_core_task
 
 micropython.alloc_emergency_exception_buf(100)
 
@@ -43,14 +41,9 @@ def watch_deltas():
     )
 
 
-# Timer().init(
-#     period=5000,
-#     mode=Timer.PERIODIC,
-#     callback=lambda t: toggle_led()
-# )
-
-# DeviceController.set_pin_data_direction(25, is_output=True)
-
+DeviceController.set_pin_data_direction(25, is_output=True)
 DeviceController.set_pin_data_direction(2, is_output=False)
+
+init_second_core_task()
 
 watch_deltas()
