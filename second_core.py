@@ -1,5 +1,4 @@
-import _thread
-
+import utime
 from utime import ticks_us, ticks_add, ticks_diff, sleep_us
 
 from device import DeviceController
@@ -47,7 +46,7 @@ def manage_pulses():
         sleep_us(100)
 
 
-def pulse(pin_number: int, duration_ms: float):
+def pulse_bak(pin_number: int, duration_ms: float):
     tasks.append([
         0,
         ticks_add(ticks_us(), int(duration_ms * 1e3)),
@@ -55,5 +54,12 @@ def pulse(pin_number: int, duration_ms: float):
     ])
 
 
-def init_second_core_task():
-    _thread.start_new_thread(manage_pulses, ())
+def pulse(pin_number: int, duration_ms: float):
+    DeviceController.pin(pin_number).set_value(1)
+
+    utime.sleep_us(int(duration_ms * 1e3))
+
+    DeviceController.pin(pin_number).set_value(0)
+
+# def init_second_core_task():
+#     _thread.start_new_thread(manage_pulses, ())
